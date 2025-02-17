@@ -43,9 +43,24 @@ ament_target_dependencies(pick_and_place_trajectory
     moveit_ros_planning
     control_msgs)
 
+add_executable(pick_and_place_real_trajectory
+    src/pick_and_place_real.cpp)
+target_include_directories(pick_and_place_real_trajectory
+    PUBLIC include)
+ament_target_dependencies(pick_and_place_real_trajectory
+    ament_cmake
+    rclcpp
+    rclcpp_action
+    moveit_core
+    moveit_ros_planning_interface
+    interactive_markers
+    moveit_ros_planning
+    control_msgs)
+
 # Install the executable
 install(TARGETS
 	pick_and_place_trajectory
+	pick_and_place_real_trajectory
     DESTINATION lib/${PROJECT_NAME}
 )
 
