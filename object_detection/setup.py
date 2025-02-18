@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
         'static_transform_publisher = object_detection.static_transform_publisher:main',
+        'object_detector = object_detection.object_detection:main',
         ],
     },
 )
