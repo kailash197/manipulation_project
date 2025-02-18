@@ -26,7 +26,18 @@ def generate_launch_description():
         ],
     )
 
+    object_detection_node = Node(
+        name="object_detection_node",
+        package="object_detection",
+        executable="object_detector",
+        output="screen",
+        parameters=[{
+            'use_sim_time': True},
+        ],
+    )
+
     return LaunchDescription(
         [static_transform_node,
+        object_detection_node,
         rviz_node]
     )
