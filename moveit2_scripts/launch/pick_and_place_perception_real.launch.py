@@ -1,0 +1,41 @@
+import os
+from ament_index_python import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription, TimerAction
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
+from moveit_configs_utils import MoveItConfigsBuilder
+
+def generate_launch_description():
+    # Get the path to the launch file to be included
+    package_dir = os.path.join(get_package_share_directory('object_detection'))
+    perception_launch_file = os.path.join(package_dir, 'launch', 'object_detection_real.launch.py')
+
+    moveit_config = MoveItConfigsBuilder("name", package_name="real_moveit_config").to_moveit_configs()
+
+    # MoveItCpp executable
+    moveit_cpp_node = Node(
+        package="moveit2_scripts",
+        executable="pick_and_place_perception_real",
+        name="pick_and_place_perception_real",
+        output="screen",
+        parameters=[
+            moveit_config.robot_description,
+            moveit_config.robot_description_semantic,
+            moveit_config.robot_description_kinematics,
+            {'use_sim_time': False},
+        ],
+    )
+
+    return LaunchDescription([
+        # Include the perception launch file
+        # Includes rviz2, static_publisher and object detector
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(perception_launch_file)
+        ),
+        # Delay the execution of moveit_cpp_node by few seconds
+        TimerAction(
+            period=5.0,  # Delay in seconds
+            actions=[moveit_cpp_node]
+        )
+    ])
