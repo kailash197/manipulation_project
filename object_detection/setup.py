@@ -26,6 +26,8 @@ setup(
         'console_scripts': [
         'static_transform_publisher = object_detection.static_transform_publisher:main',
         'object_detector = object_detection.object_detection:main',
+        'static_transform_publisher_real = object_detection.static_transform_publisher_real:main',
+        'object_detector_real = object_detection.object_detection_real:main',
         ],
     },
 )
