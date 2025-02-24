@@ -1,8 +1,8 @@
 import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import TimerAction
 from ament_index_python.packages import get_package_share_directory
-
 
 def generate_launch_description():
     pkg_dir = get_package_share_directory('object_detection')
@@ -13,31 +13,45 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         output='screen',
+        parameters=[{
+            'use_sim_time': False},
+        ],
         arguments=['-d', rviz_config_file]
     )
 
-    static_transform_node = Node(
-        package="object_detection",
-        executable="static_transform_publisher_real",
-        name="static_transform_real_node",
-        output="screen",
-        parameters=[{
-            'use_sim_time': False},
-        ],
+    static_transform_node = TimerAction(
+        period=3.0,  # Delay of 3 seconds
+        actions=[
+            Node(
+                package="object_detection",
+                executable="static_transform_publisher_real",
+                name="static_transform_real_node",
+                output="screen",
+                parameters=[{
+                    'use_sim_time': False},
+                ],
+            )
+        ]
     )
 
-    object_detection_node = Node(
-        package="object_detection",
-        executable="object_detector_real",
-        name="object_detection_real_node",
-        output="screen",
-        parameters=[{
-            'use_sim_time': False},
-        ],
+    object_detection_node = TimerAction(
+        period=0.0,  # No Delay
+        actions=[
+            Node(
+                package="object_detection",
+                executable="object_detector_real",
+                name="object_detection_real_node",
+                output="screen",
+                parameters=[{
+                    'use_sim_time': False},
+                ],
+            )
+        ]
     )
 
     return LaunchDescription(
-        [static_transform_node,
+        [rviz_node,
         object_detection_node,
-        rviz_node]
+        static_transform_node
+        ]
     )
