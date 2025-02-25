@@ -255,7 +255,7 @@ PickAndPlaceTrajectory::PickAndPlaceTrajectory(
 }
 
 void PickAndPlaceTrajectory::execute_trajectory_plan() {
-  float offset = 0.05;
+  float offset = 0.15;
   RCLCPP_INFO(LOGGER, "Planning and Executing Pick And Place Trajectory...");
 
   RCLCPP_INFO(LOGGER, "Going to Home Position...");
@@ -264,7 +264,7 @@ void PickAndPlaceTrajectory::execute_trajectory_plan() {
   execute_trajectory_kinematics();
 
   RCLCPP_INFO(LOGGER, "Going to Pregrasp Position...");
-  setup_goal_pose_target(0.343, 0.132, 0.24, -1.0, 0.0, 0.0, 0.0);
+  setup_goal_pose_target(0.343, 0.132, 0.34, -1.0, 0.0, 0.0, 0.0);
   plan_trajectory_kinematics();
   execute_trajectory_kinematics();
 
@@ -284,7 +284,7 @@ void PickAndPlaceTrajectory::execute_trajectory_plan() {
   execute_trajectory_gripper();
 
   RCLCPP_INFO(LOGGER, "Retreating...");
-  setup_waypoints_target(0.0, 0.0, +offset);
+  setup_waypoints_target(0.0, 0.0, +offset + 0.10);
   plan_trajectory_cartesian();
   execute_trajectory_cartesian();
 
